@@ -217,7 +217,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     
     fileprivate func opacityValue(geometry: GeometryProxy) -> Double {
         if self.options.backgroundBlur {
-            if self.options.absolutePositionValue {
+            if self.bottomSheetPosition.rawValue > 1 {
                 return Double((self.bottomSheetPosition.rawValue - self.translation) / geometry.size.height)
             } else {
                 return Double((self.bottomSheetPosition.rawValue * geometry.size.height - self.translation) / geometry.size.height)
@@ -238,7 +238,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     }
     
     fileprivate func frameHeightValue(geometry: GeometryProxy) -> Double {
-        if self.options.absolutePositionValue {
+        if self.bottomSheetPosition.rawValue > 1 {
             return min(max(self.bottomSheetPosition.rawValue - self.translation, 0), geometry.size.height * 1.05)
         } else {
             return min(max((geometry.size.height * self.bottomSheetPosition.rawValue) - self.translation, 0), geometry.size.height * 1.05)
@@ -249,13 +249,13 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
         if self.isHiddenPosition {
             return max(geometry.size.height + geometry.safeAreaInsets.bottom, geometry.size.height * -0.05)
         } else if self.isBottomPosition {
-            if self.options.absolutePositionValue {
+            if self.bottomSheetPosition.rawValue > 1 {
                 return max(geometry.size.height - self.bottomSheetPosition.rawValue + self.translation + geometry.safeAreaInsets.bottom, geometry.size.height * -0.05)
             } else {
                 return max(geometry.size.height - (geometry.size.height * self.bottomSheetPosition.rawValue) + self.translation + geometry.safeAreaInsets.bottom, geometry.size.height * -0.05)
             }
         } else {
-            if self.options.absolutePositionValue {
+            if self.bottomSheetPosition.rawValue > 1 {
                 return max(geometry.size.height - self.bottomSheetPosition.rawValue + self.translation, geometry.size.height * -0.05)
             } else {
                 return max(geometry.size.height - (geometry.size.height * self.bottomSheetPosition.rawValue) + self.translation, geometry.size.height * -0.05)
