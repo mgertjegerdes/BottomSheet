@@ -20,7 +20,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
     fileprivate let headerContent: hContent?
     fileprivate let mainContent: mContent
     
-    fileprivate let allCases = bottomSheetPositionEnum.allCases
+    fileprivate let allCases = bottomSheetPositionEnum.allCases.map({ $0 })
     
     
     fileprivate var isHiddenPosition: Bool {
