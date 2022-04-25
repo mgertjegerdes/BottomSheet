@@ -141,7 +141,7 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewControllerRepresentabl
         
         fileprivate func updateScroll(for offset: CGPoint) {
             DispatchQueue.main.async {
-                if offset.y <= 0 {
+                if offset.y == 0 {
                     self.isScrollEnabled = false
                 } else {
                     self.isScrollEnabled = true
