@@ -25,44 +25,43 @@ internal struct UIScrollViewWrapper<Content: View>: UIViewControllerRepresentabl
         viewController.hostingController.rootView = content
         viewController.scrollView.addSubview(viewController.hostingController.view)
         
-        var contentSize: CGSize = viewController.hostingController.view.intrinsicContentSize
-        contentSize.width = viewController.scrollView.frame.width
-        viewController.hostingController.view.frame.size = contentSize
-        viewController.scrollView.contentSize = contentSize
-        
-        viewController.view.updateConstraintsIfNeeded()
-        viewController.view.layoutIfNeeded()
-        
-        // isScrollEnabled
-        if viewController.scrollView.isScrollEnabled != self.isScrollEnabled {
-            viewController.scrollView.isScrollEnabled = self.isScrollEnabled
-        }
-        
-        // dragState
-        switch self.dragState {
-        case .none:
-            return
-        case .changed(value: let value):
-            DispatchQueue.main.async {
+        DispatchQueue.main.async {
+            var contentSize: CGSize = viewController.hostingController.view.intrinsicContentSize
+            contentSize.width = viewController.scrollView.frame.width
+            viewController.hostingController.view.frame.size = contentSize
+            viewController.scrollView.contentSize = contentSize
+            
+            viewController.view.updateConstraintsIfNeeded()
+            viewController.view.layoutIfNeeded()
+            
+            // isScrollEnabled
+            if viewController.scrollView.isScrollEnabled != self.isScrollEnabled {
+                viewController.scrollView.isScrollEnabled = self.isScrollEnabled
+            }
+            
+            // dragState
+            switch self.dragState {
+            case .none:
+                return
+            case .changed(value: let value):
                 self.contentOffsetAnimation?.invalidate()
                 self.contentOffsetAnimation = nil
-            }
-            
-            let dims = viewController.scrollView.bounds.size.height
-            
-            let clampedY: CGFloat = min(max(-value.translation.height, 0), viewController.scrollView.contentSize.height - viewController.scrollView.bounds.height)
-            let sign: CGFloat = clampedY > -value.translation.height ? -1 : 1
-            let result: CGFloat = clampedY + sign * ((1.0 - (1.0 / (abs(-value.translation.height - clampedY) * 0.55 / dims + 1.0))) * dims)
-            
-            viewController.scrollView.contentOffset.y = result
-        case .ended(value: let value):
-            DispatchQueue.main.async {
+                
+                let dims = viewController.scrollView.bounds.size.height
+                
+                let clampedY: CGFloat = min(max(-value.translation.height, 0), viewController.scrollView.contentSize.height - viewController.scrollView.bounds.height)
+                let sign: CGFloat = clampedY > -value.translation.height ? -1 : 1
+                let result: CGFloat = clampedY + sign * ((1.0 - (1.0 / (abs(-value.translation.height - clampedY) * 0.55 / dims + 1.0))) * dims)
+                
+                viewController.scrollView.contentOffset.y = result
+            case .ended(value: let value):
                 self.dragState = .none
+                
+                let velocityY = (value.location.y - value.predictedEndLocation.y) / (UIScrollView.DecelerationRate.normal.rawValue / (1000.0 * (1.0 - UIScrollView.DecelerationRate.normal.rawValue)))
+                self.completeGesture(with: velocityY, in: viewController)
             }
-            
-            let velocityY = (value.location.y - value.predictedEndLocation.y) / (UIScrollView.DecelerationRate.normal.rawValue / (1000.0 * (1.0 - UIScrollView.DecelerationRate.normal.rawValue)))
-            self.completeGesture(with: velocityY, in: viewController)
         }
+        
     }
     
     func makeCoordinator() -> Coordinator {
