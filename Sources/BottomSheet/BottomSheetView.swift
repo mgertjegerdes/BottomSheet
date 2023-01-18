@@ -125,34 +125,37 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                         Group {
                             if self.options.appleScrollBehavior && !self.options.notResizeable {
                                 // Content for .appleScrollBehavior
-                                UIScrollViewWrapper(isScrollEnabled: self.$isScrollEnabled, dragState: self.$dragState) {
+                                ScrollView {
                                     self.mainContent
                                 }
-                                .gesture(
-                                    self.isScrollEnabled ? nil :
-                                        DragGesture()
-                                        .onChanged { value in
-                                            if self.isTopPosition && value.translation.height < 0 {
-                                                self.dragState = .changed(value: value)
-                                                self.translation = 0
-                                            } else {
-                                                self.dragState = .none
-                                                self.translation = value.translation.height
-                                            }
-                                            self.endEditing()
-                                        }
-                                        .onEnded { value in
-                                            if value.translation.height < 0 && self.isTopPosition {
-                                                self.dragState = .ended(value: value)
-                                                self.translation = 0
-                                                self.isScrollEnabled = true
-                                            } else {
-                                                self.dragState = .none
-                                                let height: CGFloat = value.translation.height / geometry.size.height
-                                                self.switchPosition(with: height)
-                                            }
-                                        }
-                                )
+//                                UIScrollViewWrapper(isScrollEnabled: self.$isScrollEnabled, dragState: self.$dragState) {
+//                                    self.mainContent
+//                                }
+//                                .gesture(
+//                                    self.isScrollEnabled ? nil :
+//                                        DragGesture()
+//                                        .onChanged { value in
+//                                            if self.isTopPosition && value.translation.height < 0 {
+//                                                self.dragState = .changed(value: value)
+//                                                self.translation = 0
+//                                            } else {
+//                                                self.dragState = .none
+//                                                self.translation = value.translation.height
+//                                            }
+//                                            self.endEditing()
+//                                        }
+//                                        .onEnded { value in
+//                                            if value.translation.height < 0 && self.isTopPosition {
+//                                                self.dragState = .ended(value: value)
+//                                                self.translation = 0
+//                                                self.isScrollEnabled = true
+//                                            } else {
+//                                                self.dragState = .none
+//                                                let height: CGFloat = value.translation.height / geometry.size.height
+//                                                self.switchPosition(with: height)
+//                                            }
+//                                        }
+//                                )
                             } else if self.options.allowContentDrag && !self.options.notResizeable {
                                 // Content for .allowContentDrag
                                 self.mainContent
