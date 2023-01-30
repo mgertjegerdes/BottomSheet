@@ -207,7 +207,7 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                             }
                     )
             )
-            .frame(width: geometry.size.width, height: self.frameHeightValue(geometry: geometry), alignment: .top)
+//            .frame(width: geometry.size.width, height: self.frameHeightValue(geometry: geometry), alignment: .top)
             .offset(y: self.offsetYValue(geometry: geometry))
             .transition(.move(edge: .bottom))
         }
