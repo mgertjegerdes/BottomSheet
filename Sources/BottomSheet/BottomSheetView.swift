@@ -171,8 +171,8 @@ internal struct BottomSheetView<hContent: View, mContent: View, bottomSheetPosit
                         Color.clear
                     }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
+                //.frame(maxWidth: .infinity, maxHeight: .infinity)
+                Spacer(minLength: 0)
             }
             .edgesIgnoringSafeArea(.bottom)
             .background(
